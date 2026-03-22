@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flores Amarillas Ultra</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg1: #f9f1e6;
+      --bg2: #efd9c1;
+      --card: rgba(255, 249, 241, 0.75);
+      --text: #5a4333;
+      --muted: #806553;
+      --gold1: #ffd84f;
+      --gold2: #fff08a;
+      --gold3: #ffc82e;
+      --center: #5d3515;
+      --trunk1: #8a572d;
+      --trunk2: #a56d3f;
+      --shadow: rgba(68, 42, 18, .13);
+      --line: rgba(90, 67, 51, .24);
+      --leaf1: #88c46a;
+      --leaf2: #6faa50;
+      --leaf3: #5e9744;
+      --leafVein: rgba(70, 110, 46, 0.72);
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at 10% 15%, rgba(255,255,255,.95), transparent 24%),
+        radial-gradient(circle at 90% 8%, rgba(255,243,184,.6), transparent 22%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: var(--text);
+      position: relative;
+    }
+
+    .container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      width: min(1240px, 100%);
+      min-height: 780px;
+      border-radius: 36px;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.62);
+      box-shadow: 0 30px 80px var(--shadow);
+      backdrop-filter: blur(18px);
+      position: relative;
+      overflow: hidden;
+      padding: 34px;
+    }
+
+    .glow {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(46px);
+      opacity: .45;
+      pointer-events: none;
+    }
+
+    .glow.one {
+      width: 300px;
+      height: 300px;
+      top: -70px;
+      right: -60px;
+      background: rgba(255, 221, 103, .56);
+    }
+
+    .glow.two {
+      width: 280px;
+      height: 280px;
+      left: -60px;
+      bottom: -90px;
+      background: rgba(255,255,255,.8);
+    }
+
+    .intro-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, rgba(255,248,238,.96), rgba(244,225,205,.96));
+      transition: opacity .9s ease, visibility .9s ease;
+      pointer-events: auto;
+    }
+
+    .intro-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .intro-card {
+      text-align: center;
+      padding: 34px 28px;
+      border-radius: 30px;
+      background: rgba(255,255,255,.58);
+      border: 1px solid rgba(255,255,255,.8);
+      box-shadow: 0 22px 60px rgba(90,67,51,.1);
+      max-width: 560px;
+      width: calc(100% - 40px);
+      transform: translateY(10px);
+      animation: floatIn 1s ease forwards;
+      position: relative;
+      z-index: 31;
+    }
+
+    .intro-badge {
+      display: inline-flex;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.75);
+      color: var(--muted);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    .intro-card h2 {
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.02;
+      margin-bottom: 16px;
+    }
+
+    .intro-card p {
+      font-size: clamp(17px, 2vw, 22px);
+      color: #745a47;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .open-btn {
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 15px 24px;
+      font-size: 16px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ffe07a, #ffc93a);
+      color: #5c4129;
+      box-shadow: 0 14px 28px rgba(90,67,51,.12);
+      transition: transform .2s ease, box-shadow .2s ease;
+      position: relative;
+      z-index: 32;
+    }
+
+    .open-btn:hover { transform: translateY(-2px) scale(1.01); }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1.18fr;
+      gap: 22px;
+      min-height: 712px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .left {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 6px 4px 0 6px;
+      position: relative;
+      z-index: 4;
+    }
+
+    .chip {
+      width: fit-content;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.68);
+      border: 1px solid rgba(122,95,77,.12);
+      font-size: 13px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 1s ease forwards .25s;
+    }
+
+    .headline {
+      font-size: clamp(34px, 4.4vw, 60px);
+      line-height: 1.02;
+      letter-spacing: -.03em;
+      max-width: 520px;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeUp 1s ease forwards .45s;
+    }
+
+    .typed-wrap {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 1s ease forwards .75s;
+    }
+
+    .typed {
+      min-height: 180px;
+      max-width: 470px;
+      white-space: pre-line;
+      font-size: clamp(17px, 1.65vw, 23px);
+      line-height: 1.9;
+      color: #6b5240;
+    }
+
+    .cursor {
+      display: inline-block;
+      margin-left: 4px;
+      color: var(--gold3);
+      animation: blink .85s infinite;
+    }
+
+    .signature {
+      font-size: clamp(24px, 2.3vw, 34px);
+      font-style: italic;
+      color: #7a5d46;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 1s ease forwards 2.15s;
+    }
+
+    .mini-quote {
+      width: fit-content;
+      max-width: 420px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.48);
+      border: 1px solid rgba(122,95,77,.12);
+      font-size: 15px;
+      color: #876d59;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 1s ease forwards 2.4s;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 1s ease forwards 2.7s;
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-size: 15px;
+      transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+      box-shadow: 0 10px 22px rgba(90,67,51,.09);
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn.primary { background: linear-gradient(135deg, #ffe07a, #ffcb4d); color: #5b432c; }
+    .btn.secondary { background: rgba(255,255,255,.82); color: #6c5443; }
+
+    .counter, .music, .footer-note {
+      background: rgba(255,255,255,.46);
+      border: 1px solid rgba(122,95,77,.12);
+      box-shadow: 0 14px 30px rgba(90,67,51,.07);
+    }
+
+    .counter {
+      margin-top: auto;
+      padding: 18px 20px;
+      border-radius: 24px;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeUp 1s ease forwards 1.35s;
+    }
+
+    .counter .label {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .counter .value {
+      font-family: Arial, sans-serif;
+      font-size: clamp(18px, 1.6vw, 28px);
+      font-weight: 700;
+      line-height: 1.5;
+      color: #4b3728;
+    }
+
+    .music {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeUp 1s ease forwards 1.65s;
+    }
+
+    .music-meta { min-width: 0; }
+
+    .music-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #5f4534;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 220px;
+    }
+
+    .music-sub {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #8c705b;
+    }
+
+    .bars {
+      display: flex;
+      align-items: end;
+      gap: 4px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+
+    .bar {
+      width: 4px;
+      border-radius: 999px;
+      background: linear-gradient(to top, #f3ba24, #fff1a1);
+      animation: musicBar 1s ease-in-out infinite;
+    }
+
+    .bar:nth-child(2){ animation-delay: .15s; }
+    .bar:nth-child(3){ animation-delay: .3s; }
+    .bar:nth-child(4){ animation-delay: .45s; }
+    .bar:nth-child(5){ animation-delay: .6s; }
+
+    .footer-note {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      font-size: 13px;
+      color: #856a57;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeUp 1s ease forwards 1.9s;
+    }
+
+    .right {
+      position: relative;
+      min-height: 680px;
+    }
+
+    .tree-zone {
+      position: absolute;
+      inset: 0;
+      border-radius: 30px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.38);
+      background:
+        radial-gradient(circle at 55% 36%, rgba(255,243,172,.22), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,.25), rgba(255,255,255,.06));
+    }
+
+    .tree-base {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 58px;
+      height: 3px;
+      background: var(--line);
+      z-index: 2;
+    }
+
+    .tree {
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      top: 16px;
+      bottom: 58px;
+    }
+
+    .heart-area {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .flower {
+      position: absolute;
+      width: var(--size, 22px);
+      height: var(--size, 22px);
+      opacity: 0;
+      transform: scale(.12) rotate(-60deg);
+      filter: drop-shadow(0 4px 7px rgba(68, 41, 18, .16));
+      animation: bloom .95s ease forwards;
+    }
+
+    .petal {
+      position: absolute;
+      width: calc(var(--size, 22px) * 0.5);
+      height: calc(var(--size, 22px) * 0.5);
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, var(--gold2), var(--gold1) 58%, var(--gold3));
+    }
+
+    .p1 { top: 0; left: 25%; }
+    .p2 { top: 25%; left: 0; }
+    .p3 { top: 25%; right: 0; }
+    .p4 { bottom: 0; left: 25%; }
+
+    .center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(circle, #764717, var(--center));
+      z-index: 2;
+    }
+
+    .leaf {
+      position: absolute;
+      width: var(--leaf-w, 22px);
+      height: var(--leaf-h, 12px);
+      opacity: 0;
+      transform: rotate(var(--rot, 0deg)) scale(.2);
+      transform-origin: center center;
+      animation: leafAppear .8s ease forwards;
+      pointer-events: none;
+    }
+
+    .leaf-shape {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--leaf1), var(--leaf2) 60%, var(--leaf3));
+      border-radius: 100% 0 100% 0 / 100% 0 100% 0;
+      box-shadow:
+        inset -2px -2px 0 rgba(40,80,30,.08),
+        0 2px 4px rgba(52, 92, 43, .16);
+    }
+
+    .leaf-vein {
+      position: absolute;
+      left: 47%;
+      top: 10%;
+      width: 2px;
+      height: 80%;
+      background: var(--leafVein);
+      border-radius: 999px;
+      transform: rotate(10deg);
+      transform-origin: center top;
+    }
+
+    .leaf-vein::before,
+    .leaf-vein::after {
+      content: "";
+      position: absolute;
+      width: 2px;
+      height: 28%;
+      background: var(--leafVein);
+      border-radius: 999px;
+      left: -5px;
+    }
+
+    .leaf-vein::before {
+      top: 18%;
+      transform: rotate(-52deg);
+      box-shadow:
+        10px 12px 0 var(--leafVein),
+        18px 24px 0 var(--leafVein);
+    }
+
+    .leaf-vein::after {
+      top: 14%;
+      transform: rotate(52deg);
+      box-shadow:
+        10px 12px 0 var(--leafVein),
+        18px 24px 0 var(--leafVein);
+    }
+
+    .photo-corner {
+      position: absolute;
+      width: 116px;
+      height: 136px;
+      border-radius: 22px;
+      overflow: hidden;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.85);
+      box-shadow: 0 16px 28px rgba(90,67,51,.12);
+      z-index: 7;
+      opacity: 0;
+      transform: translateY(18px) rotate(var(--r,0deg));
+      animation: polaroidIn .9s ease forwards;
+      transition: transform .5s ease, box-shadow .5s ease, filter .5s ease;
+    }
+
+    .photo-corner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: contrast(1.05) saturate(1.1) brightness(1.02);
+      animation: slowZoom 14s ease-in-out infinite alternate;
+    }
+
+    .photo-corner:hover {
+      transform: translateY(-4px) rotate(var(--r,0deg)) scale(1.03);
+      box-shadow: 0 22px 36px rgba(90,67,51,.18);
+    }
+
+    .photo-corner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.10), transparent 35%, transparent 70%, rgba(255,255,255,.06));
+      pointer-events: none;
+    }
+
+    .photo-top-left { top: 20px; left: 18px; --r: -7deg; animation-delay: 2.2s; }
+    .photo-top-right { top: 20px; right: 18px; --r: 6deg; animation-delay: 2.35s; }
+    .photo-bottom-left { bottom: 78px; left: 18px; --r: -5deg; animation-delay: 2.5s; }
+    .photo-bottom-right { bottom: 78px; right: 18px; --r: 5deg; animation-delay: 2.65s; }
+
+    .sparkle {
+      position: absolute;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0;
+      animation: sparkleFloat linear forwards;
+      font-size: 14px;
+    }
+
+    .floating-heart, .falling-petal {
+      position: fixed;
+      user-select: none;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .floating-heart {
+      bottom: -24px;
+      opacity: 0;
+      animation: rise 8s linear forwards;
+    }
+
+    .falling-petal {
+      top: -20px;
+      opacity: .88;
+      animation: fallPetal linear forwards;
+    }
+
+    .hint {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 14px;
+      z-index: 8;
+      font-size: 12px;
+      color: #8b705b;
+      text-align: center;
+      width: 100%;
+      pointer-events: none;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    @keyframes bloom {
+      0% { opacity: 0; transform: scale(.1) rotate(-80deg); }
+      60% { opacity: 1; transform: scale(1.2) rotate(9deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+
+    @keyframes leafAppear {
+      0% { opacity: 0; transform: rotate(var(--rot,0deg)) scale(.1); }
+      65% { opacity: .95; transform: rotate(var(--rot,0deg)) scale(1.08); }
+      100% { opacity: .9; transform: rotate(var(--rot,0deg)) scale(1); }
+    }
+
+    @keyframes sparkleFloat {
+      0% { transform: translateY(0) scale(.5); opacity: 0; }
+      15% { opacity: 1; }
+      100% { transform: translateY(-100px) scale(1.15); opacity: 0; }
+    }
+
+    @keyframes rise {
+      0% { transform: translateY(0); opacity: 0; }
+      10% { opacity: .95; }
+      100% { transform: translateY(-96vh) translateX(36px); opacity: 0; }
+    }
+
+    @keyframes fallPetal {
+      0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0; }
+      10% { opacity: .9; }
+      100% { transform: translateY(110vh) rotate(320deg) translateX(54px); opacity: 0; }
+    }
+
+    @keyframes musicBar {
+      0%,100% { height: 8px; }
+      50% { height: 30px; }
+    }
+
+    @keyframes polaroidIn {
+      to { opacity: 1; transform: rotate(var(--r,0deg)) translateY(0); }
+    }
+
+    @keyframes floatIn {
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes slowZoom {
+      from { transform: scale(1); }
+      to { transform: scale(1.08); }
+    }
+
+    @media (max-width: 1020px) {
+      .card { min-height: 1120px; padding: 22px; }
+      .layout { grid-template-columns: 1fr; }
+      .right { min-height: 560px; }
+    }
+
+    @media (max-width: 640px) {
+      .card { min-height: 1200px; border-radius: 28px; }
+      .headline { max-width: 100%; }
+      .typed { min-height: 210px; }
+      .right { min-height: 520px; }
+      .tree { left: 10px; right: 10px; }
+      .photo-corner { width: 88px; height: 104px; border-radius: 16px; }
+      .photo-top-left { top: 12px; left: 10px; }
+      .photo-top-right { top: 12px; right: 10px; }
+      .photo-bottom-left { bottom: 72px; left: 10px; }
+      .photo-bottom-right { bottom: 72px; right: 10px; }
+      .music-title { max-width: 150px; }
+      .intro-card h2 { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="glow one"></div>
+      <div class="glow two"></div>
+
+      <div class="intro-screen" id="introScreen">
+        <div class="intro-card">
+          <div class="intro-badge">Pequeño detalle a mi niña.</div>
+          <h2>Flores amarillas para alguien muy especial 💛</h2>
+          <p>Abre la carta y disfruta del contenido mi vida :3.</p>
+          <button class="open-btn" id="openBtn">Abrir carta</button>
+        </div>
+      </div>
+
+      <div class="layout">
+        <section class="left">
+          <div class="chip">Hecho con amor</div>
+          <h1 class="headline">Flores amarillas para mi princesa</h1>
+
+          <div class="typed-wrap">
+            <div class="typed" id="typedText"></div><span class="cursor">|</span>
+          </div>
+
+          <div class="signature">— Te amo muchísimo 🌼</div>
+          <div class="mini-quote">“Si pudiera elegir un lugar seguro, sería a tu lado.”</div>
+
+          <div class="controls">
+            <button class="btn primary" id="musicBtn">Pausar música</button>
+            <button class="btn secondary" id="replayBtn">Repetir flores</button>
+          </div>
+
+          <div class="counter">
+            <div class="label">Mi amor por ti comenzó hace...</div>
+            <div class="value" id="timer">0 días 00 horas 00 minutos 00 segundos</div>
+          </div>
+
+          <div class="music">
+            <div class="music-meta">
+              <div class="music-title">Nuestra canción favorita</div>
+              <div class="music-sub">La cancion que mas veces hemos cantado he incluso hemos bailado</div>
+            </div>
+            <div class="bars" aria-hidden="true">
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+            </div>
+          </div>
+
+          <div class="footer-note">Se que no son las flores tradicionales, pero es un detalle que queria darte</div>
+        </section>
+
+        <section class="right">
+          <div class="tree-zone" id="treeZone">
+            <div class="tree" id="tree">
+              <svg viewBox="0 0 700 760" style="position:absolute; inset:0; width:100%; height:100%; z-index:2; overflow:visible;">
+                <path d="M350 690 C345 635,345 575,350 510" stroke="#8a572d" stroke-width="44" stroke-linecap="round" fill="none"/>
+                <path d="M350 520 C300 500,245 462,190 410" stroke="#8a572d" stroke-width="26" stroke-linecap="round" fill="none"/>
+                <path d="M350 510 C408 490,464 452,520 398" stroke="#8a572d" stroke-width="26" stroke-linecap="round" fill="none"/>
+                <path d="M350 455 C312 412,286 362,270 306" stroke="#8a572d" stroke-width="20" stroke-linecap="round" fill="none"/>
+                <path d="M350 450 C390 410,418 358,432 300" stroke="#8a572d" stroke-width="20" stroke-linecap="round" fill="none"/>
+                <path d="M300 438 C254 408,220 372,190 330" stroke="#936238" stroke-width="16" stroke-linecap="round" fill="none"/>
+                <path d="M402 432 C448 402,485 366,518 322" stroke="#936238" stroke-width="16" stroke-linecap="round" fill="none"/>
+                <path d="M272 340 C238 305,214 268,198 230" stroke="#9a6a41" stroke-width="12" stroke-linecap="round" fill="none"/>
+                <path d="M272 340 C288 296,294 252,292 210" stroke="#9a6a41" stroke-width="12" stroke-linecap="round" fill="none"/>
+                <path d="M430 336 C462 300,486 262,500 222" stroke="#9a6a41" stroke-width="12" stroke-linecap="round" fill="none"/>
+                <path d="M430 336 C416 292,410 248,412 206" stroke="#9a6a41" stroke-width="12" stroke-linecap="round" fill="none"/>
+                <path d="M198 230 C160 216,132 196,108 168" stroke="#a5734a" stroke-width="9" stroke-linecap="round" fill="none"/>
+                <path d="M198 230 C182 188,178 152,182 118" stroke="#a5734a" stroke-width="9" stroke-linecap="round" fill="none"/>
+                <path d="M292 210 C266 176,246 144,226 112" stroke="#a5734a" stroke-width="9" stroke-linecap="round" fill="none"/>
+                <path d="M292 210 C308 168,318 132,330 98" stroke="#a5734a" stroke-width="9" stroke-linecap="round" fill="none"/>
+                <path d="M412 206 C438 172,460 142,484 112" stroke="#a5734a" stroke-width="9" stroke-linecap="round" fill="none"/>
+                <path d="M412 206 C398 166,392 130,388 96" stroke="#a5734a" stroke-width="9" stroke-linecap="round" fill="none"/>
+                <path d="M500 222 C532 206,560 182,586 154" stroke="#a5734a" stroke-width="9" stroke-linecap="round" fill="none"/>
+                <path d="M500 222 C516 182,522 148,524 116" stroke="#a5734a" stroke-width="9" stroke-linecap="round" fill="none"/>
+              </svg>
+
+              <div class="heart-area" id="heartArea"></div>
+            </div>
+
+            <div class="photo-corner photo-top-left">
+              <img src="foto1.jpg" alt="Foto 1">
+            </div>
+
+            <div class="photo-corner photo-top-right">
+              <img src="foto2.jpg" alt="Foto 2">
+            </div>
+
+            <div class="photo-corner photo-bottom-left">
+              <img src="foto3.jpg" alt="Foto 3">
+            </div>
+
+            <div class="photo-corner photo-bottom-right">
+              <img src="foto4.jpg" alt="Foto 4">
+            </div>
+
+            <div class="tree-base"></div>
+            <div class="hint">🌻🦋 Los mejores momentos a tu lado.</div>
+          </div>
+        </section>
+      </div>
+
+      <audio id="bgMusic" loop>
+        <source src="cancion.mp3" type="audio/mpeg">
+      </audio>
+    </div>
+  </div>
+
+  <script>
+    const introScreen = document.getElementById('introScreen');
+    const openBtn = document.getElementById('openBtn');
+    const heartArea = document.getElementById('heartArea');
+    const treeZone = document.getElementById('treeZone');
+    const typedText = document.getElementById('typedText');
+    const timer = document.getElementById('timer');
+    const musicBtn = document.getElementById('musicBtn');
+    const replayBtn = document.getElementById('replayBtn');
+    const bgMusic = document.getElementById('bgMusic');
+
+    const message = `Flores amarillas para el amor de mi vida:
+
+Si pudiera elegir un lugar seguro,
+sería a tu lado.
+
+Cuanto más tiempo estoy contigo,
+más te amo.`;
+
+    const startDate = new Date('2024-08-31T00:00:00');
+
+    let started = false;
+    let sparkleInterval = null;
+    let heartInterval = null;
+    let petalInterval = null;
+    let photoShiftInterval = null;
+
+    function updateTimer() {
+      const now = new Date();
+      const diff = now - startDate;
+
+      if (diff < 0) {
+        timer.textContent = 'Aún no comienza la fecha';
+        return;
+      }
+
+      const seconds = Math.floor(diff / 1000) % 60;
+      const minutes = Math.floor(diff / (1000 * 60)) % 60;
+      const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+      timer.textContent =
+        `${days} días ${String(hours).padStart(2, '0')} horas ` +
+        `${String(minutes).padStart(2, '0')} minutos ` +
+        `${String(seconds).padStart(2, '0')} segundos`;
+    }
+
+    function typeMessage(text, speed = 34) {
+      typedText.textContent = '';
+      let i = 0;
+
+      function write() {
+        if (i < text.length) {
+          typedText.textContent += text.charAt(i);
+          i += 1;
+          setTimeout(write, speed);
+        }
+      }
+
+      write();
+    }
+
+    function createFlower(x, y, delay, size = 22) {
+      const flower = document.createElement('div');
+      flower.className = 'flower';
+      flower.style.left = `${x}px`;
+      flower.style.top = `${y}px`;
+      flower.style.setProperty('--size', `${size}px`);
+      flower.style.animationDelay = `${delay}s`;
+      flower.style.transform = `scale(.12) rotate(${Math.random() * 180 - 90}deg)`;
+
+      for (let i = 1; i <= 4; i += 1) {
+        const petal = document.createElement('div');
+        petal.className = `petal p${i}`;
+        flower.appendChild(petal);
+      }
+
+      const center = document.createElement('div');
+      center.className = 'center';
+      center.style.width = `${Math.max(6, size * 0.36)}px`;
+      center.style.height = `${Math.max(6, size * 0.36)}px`;
+      flower.appendChild(center);
+
+      heartArea.appendChild(flower);
+    }
+
+    function createLeaf(x, y, angle = 0, scale = 1, delay = 0) {
+      const leaf = document.createElement('div');
+      leaf.className = 'leaf';
+      leaf.style.left = `${x}px`;
+      leaf.style.top = `${y}px`;
+      leaf.style.setProperty('--leaf-w', `${22 * scale}px`);
+      leaf.style.setProperty('--leaf-h', `${12 * scale}px`);
+      leaf.style.setProperty('--rot', `${angle}deg`);
+      leaf.style.animationDelay = `${delay}s`;
+
+      const shape = document.createElement('div');
+      shape.className = 'leaf-shape';
+
+      const vein = document.createElement('div');
+      vein.className = 'leaf-vein';
+
+      leaf.appendChild(shape);
+      leaf.appendChild(vein);
+      heartArea.appendChild(leaf);
+    }
+
+    function generateFlowers() {
+      const w = heartArea.clientWidth;
+      const h = heartArea.clientHeight;
+
+      const leafNodes = [
+        [0.16,0.36,-40],[0.20,0.30,-20],[0.24,0.26,10],[0.30,0.24,28],[0.37,0.22,12],[0.44,0.21,-8],[0.52,0.21,10],[0.60,0.22,24],[0.68,0.25,8],[0.75,0.28,-10],[0.81,0.34,18],
+        [0.11,0.44,-32],[0.18,0.42,-12],[0.24,0.39,12],[0.31,0.35,30],[0.39,0.32,8],[0.47,0.31,-6],[0.56,0.31,8],[0.64,0.33,24],[0.72,0.37,10],[0.79,0.42,-12],[0.86,0.47,18],
+        [0.10,0.52,-24],[0.17,0.50,-8],[0.24,0.47,18],[0.32,0.43,34],[0.40,0.40,12],[0.49,0.39,-6],[0.58,0.40,14],[0.66,0.43,28],[0.74,0.48,10],[0.82,0.53,-10],[0.88,0.59,18],
+        [0.13,0.60,-18],[0.20,0.58,0],[0.28,0.55,22],[0.36,0.51,36],[0.45,0.49,10],[0.54,0.49,10],[0.63,0.51,28],[0.71,0.55,18],[0.79,0.59,0],[0.86,0.64,-18],
+        [0.18,0.67,-10],[0.27,0.65,10],[0.36,0.62,28],[0.45,0.60,8],[0.55,0.60,10],[0.64,0.62,28],[0.73,0.65,10],[0.82,0.68,-10],
+        [0.27,0.72,6],[0.37,0.70,16],[0.47,0.68,4],[0.57,0.68,6],[0.67,0.70,18],[0.77,0.72,8],
+        [0.22,0.48,-14],[0.30,0.44,8],[0.38,0.40,18],[0.62,0.40,22],[0.70,0.44,8],[0.78,0.48,-14],
+        [0.24,0.58,-10],[0.33,0.54,12],[0.41,0.50,20],[0.59,0.50,22],[0.67,0.54,14],[0.76,0.58,-10]
+      ];
+
+      const flowerClusters = [
+        [0.18,0.38,9],[0.29,0.30,8],[0.42,0.26,8],[0.56,0.26,8],[0.70,0.30,8],[0.81,0.38,9],
+        [0.14,0.49,9],[0.24,0.44,8],[0.36,0.38,8],[0.50,0.35,9],[0.64,0.39,8],[0.76,0.45,8],[0.86,0.52,9],
+        [0.14,0.60,8],[0.28,0.53,8],[0.42,0.46,8],[0.58,0.47,8],[0.72,0.54,8],[0.85,0.63,8],
+        [0.24,0.67,8],[0.39,0.59,8],[0.51,0.55,9],[0.63,0.60,8],[0.76,0.68,8],
+        [0.33,0.73,8],[0.47,0.67,8],[0.57,0.67,8],[0.69,0.73,8]
+      ];
+
+      const accentFlowers = [
+        [0.16,0.56],[0.18,0.64],[0.22,0.60],[0.22,0.54],[0.27,0.46],[0.31,0.38],[0.36,0.33],[0.40,0.28],[0.45,0.31],[0.48,0.40],
+        [0.52,0.40],[0.55,0.31],[0.60,0.28],[0.64,0.33],[0.70,0.38],[0.74,0.46],[0.79,0.54],[0.81,0.62],[0.83,0.58],[0.50,0.25],
+        [0.28,0.70],[0.38,0.64],[0.62,0.64],[0.72,0.70]
+      ];
+
+      leafNodes.forEach((node, idx) => {
+        const [nx, ny, ang] = node;
+        const x = nx * w;
+        const y = ny * h;
+
+        createLeaf(
+          x,
+          y,
+          ang + (Math.random() * 12 - 6),
+          1.02 + Math.random() * 0.24,
+          idx * 0.008
+        );
+
+        if (Math.random() < 0.42) {
+          createLeaf(
+            x + (Math.random() * 12 - 6),
+            y + (Math.random() * 12 - 6),
+            ang + 20 + (Math.random() * 10 - 5),
+            0.84 + Math.random() * 0.18,
+            idx * 0.008 + 0.02
+          );
+        }
+      });
+
+      let flowerIndex = 0;
+
+      flowerClusters.forEach((cluster) => {
+        const [cxn, cyn, count] = cluster;
+        const cx = cxn * w;
+        const cy = cyn * h;
+
+        for (let i = 0; i < count; i += 1) {
+          const a = (Math.PI * 2 / count) * i + Math.random() * 0.35;
+          const r = 11 + Math.random() * 14;
+          const x = cx + Math.cos(a) * r;
+          const y = cy + Math.sin(a) * (7 + Math.random() * 8);
+          createFlower(x, y, flowerIndex * 0.011, 15 + Math.random() * 5);
+          flowerIndex += 1;
+        }
+      });
+
+      accentFlowers.forEach((p, idx) => {
+        createFlower(p[0] * w, p[1] * h, flowerIndex * 0.011 + idx * 0.016, 14 + Math.random() * 4);
+      });
+    }
+
+    function clearFlowers() {
+      heartArea.querySelectorAll('.flower, .leaf').forEach((el) => el.remove());
+    }
+
+    function createSparkle() {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      s.textContent = Math.random() > 3 ? '🌻' : '🦋';
+      s.style.left = `${50 + Math.random() * Math.max(50, treeZone.clientWidth - 100)}px`;
+      s.style.top = `${50 + Math.random() * Math.max(50, treeZone.clientHeight - 180)}px`;
+      s.style.animationDuration = `${2 + Math.random() * 2}s`;
+      treeZone.appendChild(s);
+      setTimeout(() => s.remove(), 4200);
+    }
+
+    function createFloatingThing() {
+      const el = document.createElement('div');
+      el.className = 'floating-heart';
+      el.textContent = Math.random() > 3 ? '🌻' : '🦋';
+      el.style.left = `${Math.random() * Math.max(40, window.innerWidth - 40)}px`;
+      el.style.fontSize = `${16 + Math.random() * 20}px`;
+      el.style.animationDuration = `${6 + Math.random() * 4}s`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 9500);
+    }
+
+    function createFallingLeaf() {
+      const el = document.createElement('div');
+      el.className = 'falling-petal';
+      el.textContent = '🍃';
+      el.style.left = `${Math.random() * Math.max(30, window.innerWidth - 30)}px`;
+      el.style.fontSize = `${13 + Math.random() * 8}px`;
+      el.style.animationDuration = `${8 + Math.random() * 5}s`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 14000);
+    }
+
+    function shiftPhotos() {
+      const photos = document.querySelectorAll('.photo-corner img');
+      photos.forEach((img) => {
+        const x = (Math.random() * 8 - 4).toFixed(1);
+        const y = (Math.random() * 8 - 4).toFixed(1);
+        const scale = (1.05 + Math.random() * 0.05).toFixed(3);
+        img.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+      });
+    }
+
+    function startAmbientEffects() {
+      if (!sparkleInterval) sparkleInterval = setInterval(createSparkle, 2200);
+      if (!heartInterval) heartInterval = setInterval(createFloatingThing, 2200);
+      if (!petalInterval) petalInterval = setInterval(createFallingLeaf, 4200);
+      if (!photoShiftInterval) photoShiftInterval = setInterval(shiftPhotos, 5000);
+    }
+
+    function startExperience() {
+      if (started) return;
+      started = true;
+
+      introScreen.classList.add('hidden');
+      typeMessage(message, 34);
+      clearFlowers();
+      generateFlowers();
+      shiftPhotos();
+      startAmbientEffects();
+
+      bgMusic.play().then(() => {
+        musicBtn.textContent = 'Pausar música';
+      }).catch(() => {
+        musicBtn.textContent = 'Reproducir música';
+      });
+    }
+
+    openBtn.addEventListener('click', startExperience);
+    openBtn.addEventListener('touchstart', startExperience, { passive: true });
+
+    introScreen.addEventListener('click', (e) => {
+      if (e.target === introScreen) startExperience();
+    });
+
+    replayBtn.addEventListener('click', () => {
+      clearFlowers();
+      generateFlowers();
+    });
+
+    musicBtn.addEventListener('click', async () => {
+      if (!started) startExperience();
+
+      if (bgMusic.paused) {
+        try {
+          await bgMusic.play();
+          musicBtn.textContent = 'Pausar música';
+        } catch (e) {
+          musicBtn.textContent = 'Reproducir música';
+        }
+      } else {
+        bgMusic.pause();
+        musicBtn.textContent = 'Reproducir música';
+      }
+    });
+
+    window.addEventListener('load', () => {
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    });
+  </script>
+</body>
+</html>
